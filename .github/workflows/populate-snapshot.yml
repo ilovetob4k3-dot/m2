@@ -1,0 +1,42 @@
+name: Populate Moonnsy snapshot
+
+on:
+  push:
+    paths:
+      - ".github/workflows/populate-snapshot.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  populate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Replace repository with source snapshot
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          git clone "https://x-access-token:${GH_TOKEN}@github.com/${GITHUB_REPOSITORY}.git" target
+          git clone "https://github.com/ilovetob4k3-dot/star-archive--moonnsy--moonnsypic.git" source
+          cd source
+          git checkout 1534a1428f8e50dab2d636bc581fa5f5f8141379
+          cd ../target
+          find . -mindepth 1 -maxdepth 1 ! -name .git -exec rm -rf {} +
+          tar -C ../source --exclude=.git -cf - . | tar -xf -
+          touch .nojekyll
+          cat > README.md <<'EOF'
+          # Moonnsy public snapshot 2
+
+          This repository preserves the Moonnsy site at source commit:
+
+          `1534a1428f8e50dab2d636bc581fa5f5f8141379`
+
+          This is the later comparison snapshot selected for m2.
+          EOF
+          git add -A
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git commit -m "Set m2 to Moonnsy snapshot 1534a14"
+          git push origin HEAD:main
