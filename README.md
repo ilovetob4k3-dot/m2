@@ -2,6 +2,6 @@
 
 This repository preserves the Moonnsy site at source commit:
 
-`1989b9ef1f9a4bb065dcca25a770b8146073ee06`
+`1534a1428f8e50dab2d636bc581fa5f5f8141379`
 
-This is the middle comparison snapshot, after the large Prompts gallery was added.
+This is the later comparison snapshot selected for m2.
